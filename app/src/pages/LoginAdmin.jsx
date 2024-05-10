@@ -3,7 +3,7 @@ import { useAppContext } from '../context/context';
 import { useState, useEffect } from 'react';
 import "./css/login.css"
 function Login() {
-  const { createUser, LoginUser, retrieveUser } = useAppContext();
+  const { createUser, LoginUser, retrieveUser, waitingServer } = useAppContext();
   useEffect(()=>{
     retrieveUser()
   },[])
@@ -40,14 +40,13 @@ function Login() {
       return;
     } else {
       setWaiting(true)
-      setTimeout(() => {
-        
-          try {
-            createUser(registrationValues);
-          } finally {
-            setWaiting(false)
-          }
-      }, 1000);
+      try {
+        createUser(registrationValues);
+      }catch{
+        console.log("Error al registrar usuario")
+     } finally {
+        setWaiting(false)
+      }
     }
   };
 
@@ -122,7 +121,7 @@ function Login() {
           </label>
           {!passwordMatch && <p style={{ color: 'red' }}>Las contraseñas no coinciden</p>}
           <div className='btn__register-container'><button class="registro-btn">Registrarme</button></div>
-          {waiting && <p style={{color: 'black'}}>Aguarde un momento...</p>}
+          {waitingServer && <p style={{color: 'black'}}>Aguarde un momento...</p>}
         </form>
         
         <span class="custom-button">
@@ -162,7 +161,7 @@ function Login() {
           </div>
           
         </form>
-        {waiting && <p style={{color: 'black'}} >Aguarde un momento...</p>}
+        {waitingServer && <p style={{color: 'black'}} >Aguarde un momento...</p>}
 
         <span class="custom-button">
         <button onClick={toggleForm}>No tengo cuenta de Cinnamon</button>

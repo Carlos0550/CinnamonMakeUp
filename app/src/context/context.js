@@ -277,7 +277,10 @@ export const AppContextProvider = ({ children }) => {
         }
         }
       }
+      const [waitingServer, setWaitingServer] = useState(false)
+
     const createUser = async (registrationValues) =>{
+        setWaitingServer(true)
         try {
           const { data, error } = await supabase.auth.signUp(
             {
@@ -286,21 +289,23 @@ export const AppContextProvider = ({ children }) => {
               
             }
           )
-          console.log(data)
             if (error) {
                 alert("El correo introducido ya existe o hubo muchos intentos")
                 console.log(error)
-            }else{
-              Swal.fire({
+            }
+             
+            
+        } catch (error) {
+            console.log("Lo sentimos, ha ocurrido un error, consulta la consola de comandos para más informacion")
+            console.log("Error interno: ", error)
+        }finally{
+            setWaitingServer(false)
+            Swal.fire({
                 title: "Registro exitoso!",
                 text: "Verifica tu casilla de correo para confirmar tu cuenta",
                 icon: "success"
               });
                 navigate('/adminLogin')
-            }
-        } catch (error) {
-            console.log("Lo sentimos, ha ocurrido un error, consulta la consola de comandos para más informacion")
-            console.log("Error interno: ", error)
         }
       }
     const LogoutUser = async ()=>{
@@ -398,6 +403,7 @@ export const AppContextProvider = ({ children }) => {
             getUser,
             getIdUser,
             setShopData,
+            waitingServer
             }}>
             {children}
         </AppContext.Provider>

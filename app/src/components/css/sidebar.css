@@ -32,7 +32,7 @@ ol, ul{
 
 .navbar{
   height: var(--altura_header);
-  background: #D2988D;
+  background: #E3BBB0;
   box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
   backdrop-filter: blur( 1px );
   -webkit-backdrop-filter: blur( 1px );
@@ -85,7 +85,7 @@ ol, ul{
 
 .menu_hamburguesa:checked + .ul_links{
   height: calc(100vh - var(--altura_header));
-  background-color: #DBA07F;
+  background-color: #E3BBB0;
   border-radius: 15px;
 }
 

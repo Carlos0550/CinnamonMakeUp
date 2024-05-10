@@ -140,10 +140,9 @@ function Home() {
                     </div>
                 </section>
                 <section className='section__personalizado'>
-                    <h2>Cómo se cuanto saldra el envio</h2>
+                    <h2>Envios a todo el país</h2>
                     <ol className='ol__aside'>
-                        <li className='li__aside' style={{marginLeft: "2em"}}><h3>Lista de envios a toda la provincia de Misiones</h3></li>
-                        <li className='li__aside' style={{marginLeft: "2em"}}><h3>Lista de envios a toda Argentina</h3></li>
+                        <li className='li__aside' style={{marginLeft: "2em"}}><p>El precio del envio se debe coordinar por whatsapp, el precio varía dependiendo de la ubicación</p></li>
                     </ol>
                 </section>
 

@@ -1,6 +1,4 @@
-body{
-    background: black;
-}
+
 main{
     display: flex;
     
@@ -28,7 +26,7 @@ section{
 }
 .section__personalizado{
     margin: .5em;
-    background: #E3BBB0;
+    background: #EDDCD8;
     box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
     backdrop-filter: blur( 4px );
     -webkit-backdrop-filter: blur( 4px );
@@ -92,7 +90,7 @@ footer{
  
 }
 .product__card:hover{
-    border: 3px solid pink;
+    border: 3px solid rgb(0, 0, 0);
     
 }
 

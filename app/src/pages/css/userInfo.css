@@ -1,0 +1,111 @@
+.infoUser__container{
+    display: flex;
+    flex-direction: column;
+    
+    width: 100%;
+    height: auto;
+    padding: 1em;
+    margin: 0 auto;
+    margin-top: 2em;
+    margin-bottom: 1em;
+    border: 5px solid rgba(255, 0, 238, 0.25);
+    border-radius: 10px;
+    background: rgba(255, 0, 238, 0.25);
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+
+}
+.infoUser__H1{
+    font-size: 3em;
+    text-align: center;
+    justify-content: center;
+}
+.infoUser__H2{
+    font-size: 1.5em;
+    font-weight: bold;
+}
+.infoUser__p{
+    font-size: 1.3em;
+    margin: 0.5em;
+}
+.infoUser__container-user{
+    display: flex;
+    flex-direction: column;
+
+    margin: 0 auto;
+    margin: 0.3em;
+    margin-bottom:1em; 
+    padding: 1em;
+    background: rgba(0, 0, 0, 0.262);
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 4px );
+    -webkit-backdrop-filter: blur( 4px );
+    border-radius: 10px;
+    color: white;
+    
+}
+.label__user-label{
+    display: flex;
+    flex-direction: column;
+    width: 70%;
+    font-weight: 500;
+    margin: 0.5em;
+    padding: 0.1em;
+}
+.infoUser__btn-edit{
+    padding: 0.7em;
+    border: none;
+    border-radius: 10px;
+    color: black;
+    background-color: antiquewhite;
+    transition: all 0.3s ease-in-out;
+}
+.infoUser__btn-edit:hover{
+    transform: scale(1.05);
+    background-color: rgb(255, 191, 108);
+    filter:drop-shadow(5px 3px 10px pink);
+}
+
+.btn__user-save{
+    margin: 0.5em;
+    padding: 1em;
+    font-size: 1.1em;
+    border: none;
+    border-radius: 10px;
+    color: white;
+    background-color: antiquewhite;
+    color: black;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+}
+.btn__user-save:hover{
+    transform: scale(1.15);
+    background-color: rgb(255, 191, 108);
+    filter:drop-shadow(5px 3px 10px pink);
+}
+.compra__conteiner{
+    box-shadow: 5px 5px 5px 5px rgba(64, 64, 64, 0.586);
+    margin: 0.5em;
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    font-size: 0.8em;
+    background: rgba(0, 0, 0, 0.41);
+    box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+    backdrop-filter: blur( 6.5px );
+    -webkit-backdrop-filter: blur( 6.5px );
+    border-radius: 10px;
+    border: 1px solid rgba( 255, 255, 255, 0.18 );
+    padding: 0.9em;
+}
+
+.compra__productos{
+    width: 100%;
+    margin: 0 auto;
+    margin-bottom: 0.5em;
+    padding: 0.5em;
+   font-size: 1.2em;
+    border: 5px solid rgb(255, 255, 255);
+    border-radius: 10px;
+
+}

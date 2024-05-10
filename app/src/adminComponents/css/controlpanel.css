@@ -1,0 +1,110 @@
+.admin__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .admin__products {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+  }
+  
+  .admin__products-container {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .admin__product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .admin__picture {
+    width: 85%;
+    margin-bottom: 10px;
+  }
+  
+  .admin__img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .admin__product-name {
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+  }
+  
+  .admin__product-p {
+    margin-bottom: 5px;
+  }
+  
+  .delete__btn-panel,
+  .edit__btn-panel {
+    background-color: #ff5c5c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+  
+  .delete__btn-panel:hover,
+  .edit__btn-panel:hover {
+    background-color: #ff3333;
+  }
+  
+  .btn-save {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .btn-save:hover {
+    background-color: #45a049;
+  }
+  
+  .form-container {
+    width: 100%;
+    max-width: 500px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    font-weight: bold;
+  }
+  
+  .form-group input,
+  .form-group select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  .form-group input[type="file"] {
+    padding: 5px;
+  }
+  
+  .form-group select {
+    cursor: pointer;
+  }
+  
+  .modal-header {
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .modal-footer {
+    justify-content: center;
+  }
+  

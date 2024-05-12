@@ -2,7 +2,7 @@ import React from 'react'
 import "./css/whatsapp.css"
 function Whatsapp() {
     function linkWhatsapp() {
-        window.location.replace("https://w.app/4yrwQp")
+        window.location.replace("https://wa.me/3764757599")
     }
   return (
     <div className='whatsappContainer'>

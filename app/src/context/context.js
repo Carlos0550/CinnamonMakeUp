@@ -264,7 +264,7 @@ export const AppContextProvider = ({ children }) => {
     const retrieveUser = async() => {
         const { data, error } = await supabase.auth.getSession()
         if (!data.session) {
-          navigate("/adminLogin")
+          navigate("/")
         }else if(data.session.user.id === "a334c968-0b0b-4902-8979-a57f25757f3e"){
           setIsLogin(true)
           navigate("/controlPanel")

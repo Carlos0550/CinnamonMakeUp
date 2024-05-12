@@ -114,6 +114,16 @@ img{
     font-weight: bold;
     font-size: 1.1em;
 }
+
+@media (max-width: 768px){
+    .product__p{
+        font-size: .9em;
+    }
+    .product__name{
+        font-size: 1em;
+        font-weight: bold;
+    }
+}
 .producto__btn{
     width: 100%;
     height: auto;

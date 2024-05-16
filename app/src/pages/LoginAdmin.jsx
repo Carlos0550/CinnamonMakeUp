@@ -163,7 +163,7 @@ function Login() {
         </form>
         {waitingServer && <p style={{color: 'black'}} >Aguarde un momento...</p>}
 
-        <span class="custom-button">
+        <span className="custom-button">
         <button onClick={toggleForm}>No tengo cuenta de Cinnamon</button>
       </span>
       </>

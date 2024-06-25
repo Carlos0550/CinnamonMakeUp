@@ -22,7 +22,7 @@ const menuItem = [
 
 function Navbar() {
     const [isActive, setIsActive] = useState(false);
-    const {fetchingUser,logout, isLogout,sessionData } = useAppContext()
+    const {fetchingUser,logout, isLogout,sessionData, adminLogged } = useAppContext()
 
     const toggleMenu = () => {
         setIsActive(!isActive);

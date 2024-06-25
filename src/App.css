@@ -29,3 +29,33 @@ body{
     border-radius: 15px;
     margin: .5rem;
 }
+
+/* @media (prefers-color-scheme: dark) {
+    body {
+        background-color: #fff;
+        color: #000;
+      }
+      
+      .navbar {
+        background-color: #f06090;
+      }
+      
+      .navbar-burger {
+        color: #fff;
+      }
+  
+    /* Asegúrate de anular otros estilos si es necesario */
+
+    .tag {
+        animation: slideLeft 1s ease-in-out 0 1 normal forwards;
+    }    
+    
+    @keyframes slideLeft {
+        0% {
+            transform: translateX(-100%);
+        }
+        100% {
+            transform: translateX(0);
+        }
+    }
+    

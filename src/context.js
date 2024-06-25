@@ -182,7 +182,6 @@ export const AppContextProvider = ({ children }) => {
           setFetchingUser(false)
           setUserData(data)
         } else {
-          setUserData(null)
           setFetchingUser(false)
 
         }
@@ -270,7 +269,56 @@ export const AppContextProvider = ({ children }) => {
     }
   }
 
-  
+  const [updatingCient, setUpdatingClient] = useState(false);
+  const [errorUpdateClient, setErrorUpdateClient] = useState(false);
+  const [sucessUpdateClient,setSucessUpdateClient] = useState(false)
+  const updateClientData = async(val) =>{
+    setUpdatingClient(true)
+    try {
+      const { error } = await supabase
+      .from('usuarios')
+      .update({
+        "nombre": val.nombre,
+        "apellido": val.apellido,
+        "email": val.correo,
+        "direccion": val.direccion,
+        "telefono": val.phone,
+        "ciudad": val.ciudad,
+        "provincia": val.provincia
+      })
+      .eq('userId', val.uuid)
+      if (!error) {
+        message.success("Datos actualizados!")
+        setSucessUpdateClient(true)
+        setTimeout(() => {
+          setSucessUpdateClient(false)
+          
+        }, 2000);
+        setUpdatingClient(false)
+        message.info("Refrescando página en 3...")
+        setTimeout(() => {
+          window.location.reload()
+        }, 3000);
+      }else{
+        console.error(error)
+        message.error("Hubo un error al actualizar los datos")
+        setErrorUpdateClient(true)
+        setTimeout(() => {
+          setErrorUpdateClient(false)
+        }, 5000);
+        setUpdatingClient(false)
+
+      }
+    } catch (error) {
+      message.error("Hubo un error al actualizar los datos")
+        setErrorUpdateClient(true)
+        setTimeout(() => {
+          setErrorUpdateClient(false)
+        }, 5000);
+    }finally{
+      setUpdatingClient(false)
+    }
+  }
   return (
     <AppContext.Provider value={{
       login, errorUser,
@@ -278,7 +326,8 @@ export const AppContextProvider = ({ children }) => {
       retrieveSession, sessionData,fetchSession,
       fetchingUser, userData,
       logout,isLogout,
-      insertUserData,insertUserDataSuccess,errorInsertingUserData,insertingUserData
+      insertUserData,insertUserDataSuccess,errorInsertingUserData,insertingUserData,
+      updateClientData, errorUpdateClient, sucessUpdateClient, updatingCient
     }}>
       {children}
     </AppContext.Provider>

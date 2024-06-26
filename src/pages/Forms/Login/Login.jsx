@@ -1,16 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppContext } from '../../../context'; // Ajusta la ruta según sea necesario
+import { message } from 'antd';
 import "./login.css"
 function Login() {
   const navigate = useNavigate();
-  const { login, errorUser, sending, retrieveSession, sessionData } = useAppContext();
+  const { login, errorUser, sending, retrieveSessionUser,sessionId} = useAppContext();
 
   useEffect(() => {
-    if (sessionData) {
-      navigate("/user-dashboard");
+
+    if (sessionId !== null) {
+      navigate("/user-dashboard")
+    }else{
+      (async()=>{
+        await retrieveSessionUser()
+      })()
     }
-  }, [sessionData, navigate]);
+    
+  }, [navigate]);
 
   const [values, setValues] = useState({
     email: "",
@@ -53,13 +60,13 @@ function Login() {
           <form onSubmit={loginUser}>
             <div className='field'>
               <label className='label'>Correo:
-                <input type="email" name='email' value={values.email} onChange={handleInputChange} className='input' placeholder='Introduce tu correo' disabled={retrieveSession} />
+                <input type="email" name='email' value={values.email} onChange={handleInputChange} className='input' placeholder='Introduce tu correo'  />
               </label>
               {errorEmail ? <span className="tag is-danger">Este campo no puede estar vacio</span> : ""}
             </div>
             <div className='field'>
               <label className='label'>Contraseña:
-                <input type="password" className='input' name='password' value={values.password} onChange={handleInputChange} placeholder='Introduce tu contraseña' disabled={retrieveSession} />
+                <input type="password" className='input' name='password' value={values.password} onChange={handleInputChange} placeholder='Introduce tu contraseña'  />
               </label>
               {errorPsw ? <span className="tag is-danger">Este campo no puede estar vacio</span> : ""}
             </div>
@@ -67,7 +74,6 @@ function Login() {
               <div className='control'>
                 {sending ? "" : <button className='button is-primary is-fullwidth' type='submit'>Iniciar Sesión</button>}
                 {sending ? <span className='tag is-info'>Aguarde un momento...</span> : ""}
-                {retrieveSession ? <span className='tag is-info'>Aguarde...</span> : ""}
                 {errorUser ? <span className="tag is-danger">Correo o contraseña incorrectos</span> : ""}
               </div>
             </div>

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { v4 as uuidv4 } from 'uuid';
 import { useAppContext } from '../../../../context';
 function NewUserForm() {
-  const { insertUserData,insertUserDataSuccess,errorInsertingUserData,insertingUserData } = useAppContext()
+  const { insertUserData,insertUserDataSuccess,errorInsertingUserData,insertingUserData, sessionId } = useAppContext()
+  console.log(sessionId)
   const [formData, setFormData] = useState({
     nombre: '',
     apellido: '',
@@ -12,7 +12,7 @@ function NewUserForm() {
     provincia: '',
     direccion: '',
     newUser: false,
-    uuid: uuidv4()
+    uuid: sessionId
 
   });
 

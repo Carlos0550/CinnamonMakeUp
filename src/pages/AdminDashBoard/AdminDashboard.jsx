@@ -2,17 +2,25 @@ import React,{useEffect} from 'react'
 import { useAppContext } from '../../context';
 import { useNavigate } from 'react-router-dom';
 function AdminDashboard() {
-  // const {adminLogged, sessionData} = useAppContext()
-  // useEffect(() => {
-  //   if (adminLogged) {
-  //     navigate("/admin-dashboard")
-  //   }
-  //   if (sessionData) {
-  //     navigate("/user-dashboard");
-  //   }
-  // }, [sessionData, navigate]);
+  const {sessionId, retrieveSessionUser, fetchClientData} = useAppContext()
+  const navigate = useNavigate()
+  useEffect(() => {
+
+    if (sessionId === null) {
+      (async()=>{
+        await retrieveSessionUser()
+      })()
+    }else{
+      fetchClientData()
+    }
+  }, [navigate,sessionId]);
+  useEffect(()=>{
+    if (sessionId !== process.env.REACT_APP_ADMIN_KEY) {
+      navigate("/user-dashboard")
+    }
+  },[sessionId])
   return (
-    <div>AdminDashboard</div>
+    <div></div>
   )
 }
 

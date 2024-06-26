@@ -2,8 +2,8 @@ import React, { useState } from 'react'
 import { useAppContext } from '../../../context';
 function EditClientData({toggleModal}) {
 
-    const { userData, updateClientData, errorUpdateClient, sucessUpdateClient, updatingCient } = useAppContext()
-    let client = userData[0]
+    const { clientData, updateClientData, errorUpdateClient, sucessUpdateClient, updatingCient } = useAppContext()
+    let client = clientData[0]
 
     const [formData, setFormData] = useState({
         nombre: client.nombre || 0,
@@ -13,7 +13,7 @@ function EditClientData({toggleModal}) {
         ciudad: client.ciudad || 0,
         provincia: client.provincia || 0,
         direccion: client.direccion || 0,
-        uuid: client.userId
+        uuid: client.userUuid
     })    
 
     const [errors, setErrors] = useState({

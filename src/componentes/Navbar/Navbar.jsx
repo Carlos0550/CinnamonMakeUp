@@ -22,7 +22,7 @@ const menuItem = [
 
 function Navbar() {
     const [isActive, setIsActive] = useState(false);
-    const {fetchingUser,logout, isLogout,sessionData, adminLogged } = useAppContext()
+    const {sessionId,retrievingSession,isLogout,logout} = useAppContext()
 
     const toggleMenu = () => {
         setIsActive(!isActive);
@@ -43,7 +43,7 @@ function Navbar() {
                         <img className='is-rounded m-1 p-1' src={logo} alt="Logo" />
                         
                     </div>
-                    {!fetchingUser && sessionData && (
+                    {!retrievingSession && sessionId && (
                         <div className='navbar-start '>
                             <div className='navbar-item '>
                                 {isLogout ? (

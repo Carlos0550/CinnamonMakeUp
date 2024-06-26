@@ -8,26 +8,39 @@ import { useNavigate } from 'react-router-dom';
 
 import EditClientData from './Forms/EditClientData';
 function UserDashboard() {
-  const { fetchingUser, userData, sessionData } = useAppContext();
+  const {retrieveSessionUser ,fetchClientData, fetchingClientData,clientData, sessionId, } = useAppContext();
   const [showForm, setShowForm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!sessionData) {
-      navigate("/user-login");
-    } else if (!userData) {
-      setShowForm(true);
-    }
-  }, [fetchingUser, userData, sessionData, navigate]);
 
+    if (sessionId === null) {
+      (async()=>{
+        await retrieveSessionUser()
+      })()
+    }else{
+      fetchClientData()
+    }
+  }, [navigate,sessionId]);
+
+  useEffect(()=>{
+    if (sessionId === process.env.REACT_APP_ADMIN_KEY) {
+      navigate("/admin-dashboard")
+    }else if (clientData.length === 0) {
+      setShowForm(true)
+    }
+    
+    console.log(clientData)
+
+  },[clientData])
   const [isModalActive, setIsModalActive] = useState(false)
 
-  const toggleModal = () =>{
+  const toggleModal = () => {
     setIsModalActive(!isModalActive)
   }
   return (
     <>
-      {fetchingUser ?
+      {fetchingClientData ?
         <div className='cointainer spinner'>
           <Flex align="center" gap="middle">
             <Spin size="large" />
@@ -35,15 +48,15 @@ function UserDashboard() {
         </div>
         : ""}
 
-      {showForm && userData === null && <NewUserForm />}
-      {userData && userData !== null ?
+      {showForm && clientData.length === 0 && <NewUserForm />}
+      {!fetchingClientData && clientData && clientData.length !== 0 ?
 
         <div className='container'>
           <div className='columns is-flex-direction-column'>
             <div className='block'>
               <p className='title is-3'>Mis datos</p>
             </div>
-            {userData && userData.map((item, index) => {
+            {clientData && clientData.map((item, index) => {
               return (
                 <div className='column' key={index}>
                   <div className='field '>
@@ -91,17 +104,18 @@ function UserDashboard() {
           </div>
         </div>
         : ""}
-        <div className={`modal ${isModalActive ? 'is-active' : ''}`}>
+
+        {!fetchingClientData && <div className={`modal ${isModalActive ? 'is-active' : ''}`}>
         <div className="modal-background" onClick={toggleModal}></div>
         <div className="modal-content">
-          {/* Aquí va el contenido del modal */}
           <div className="box">
-            {userData && userData.length !== 0 ?
-          <EditClientData toggleModal={toggleModal}/> : ""  }
+            {clientData && clientData.length !== 0 ?
+              <EditClientData toggleModal={toggleModal} /> : ""}
           </div>
-          
+
         </div>
-      </div>
+      </div>}
+      
     </>
   );
 }

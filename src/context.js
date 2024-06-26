@@ -18,45 +18,8 @@ export const useAppContext = () => {
 export const AppContextProvider = ({ children }) => {
   const navigate = useNavigate()
 
-
-  const [errorUser, setErrorUser] = useState(false)
-  const [sending, setSending] = useState(false);
-  const login = async (values) => {
-    setSending(true)
-    try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password,
-      })
-      console.log(error)
-      console.log(data)
-
-      if (error) {
-        setErrorUser(true)
-        setSending(false)
-        setTimeout(() => {
-          setErrorUser(false)
-        }, 2000);
-        message.error("El usuario o contraseña no es correcto")
-      }
-      if (data.user) {
-        message.success("Usuario logueado")
-        fetchSession()
-
-        navigate("/user-dashboard")
-
-        setSending(false)
-      }
-    } catch (error) {
-      message.error("Error interno del servidor, por favor, intente nuevamente")
-    } finally {
-      setSending(false)
-    }
-
-  }
-
+  //Registrar un usuario
   const [errorRegister, setErrorRegister] = useState(false);
-
   const register = async (values) => {
     setSending(true);
     try {
@@ -95,51 +58,64 @@ export const AppContextProvider = ({ children }) => {
     }
   };
 
-  const [retrieveSession, setRetrieveSession] = useState(false);
-  const [sessionData, setSessionData] = useState(null);
-  const [userMail, setUserMail] = useState(null);
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      setRetrieveSession(true);
-      message.info("Aguarde un segundo...");
-      try {
-        const { data, error } = await supabase.auth.getSession();
-        if (error) {
-          throw error;
-        }
-        if (data.session !== null) {
-          setSessionData(data.session);
-          setUserMail(data.session.user.email);
-        }
-      } catch (error) {
-        message.error("Error al iniciar sesion automaticamente");
-      } finally {
-        setRetrieveSession(false);
-      }
-    };
-
-    fetchSession();
-  }, []);
-  const fetchSession = async () => {
-    setRetrieveSession(true);
-    message.info("Aguarde un segundo...");
+  //logear un usuario
+  const [errorUser, setErrorUser] = useState(false)
+  const [sending, setSending] = useState(false);
+  const login = async (values) => {
+    setSending(true)
     try {
-      const { data, error } = await supabase.auth.getSession();
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email: values.email,
+        password: values.password,
+      })
+      console.log(error)
+      console.log(data)
+
       if (error) {
-        throw error;
+        setErrorUser(true)
+        setSending(false)
+        setTimeout(() => {
+          setErrorUser(false)
+        }, 2000);
+        message.error("El usuario o contraseña no es correcto")
       }
-      if (data.session !== null) {
-        setSessionData(data.session);
-        setUserMail(data.session.user.email);
+      if (data.user) {
+        message.success("Usuario logueado")
+        setSending(false)
+        console.log(data.user)
+        navigate("/user-dashboard")
       }
     } catch (error) {
-      message.error("Error al iniciar sesion automaticamente");
+      message.error("Error interno del servidor, por favor, intente nuevamente")
     } finally {
-      setRetrieveSession(false);
+      setSending(false)
     }
-  };
 
+  }
+  
+  //Obtener la sesion del usuario
+  const [retrievingSession, setRetrievingSession] = useState(false)
+  const [sessionId, setGetSessionId] = useState(null)
+  const retrieveSessionUser = async () => {
+    setRetrievingSession(true)
+    message.info("Un momento...")
+    try {
+      const { data, error } = await supabase.auth.getSession()
+      if (data) {
+        setGetSessionId(data.session.user.id)
+        setRetrievingSession(false)
+      }
+      if (error) {
+        message.error("Error al obtener el usuario")
+      }
+    } catch (error) {
+
+    } finally {
+      setRetrievingSession(false)
+    }
+  }
+
+  //Cerrar sesion
   const [isLogout, setIsLogout] = useState(false)
   const logout = async () => {
     setIsLogout(true)
@@ -148,95 +124,67 @@ export const AppContextProvider = ({ children }) => {
       if (error) {
         message.error("Error al cerrar la sesión");
       } else {
-        setSessionData(null);
-        setUserMail(null);
-        setIsLogout(false)
         message.success("Sesión cerrada exitosamente");
+        setClientData([])
+        setGetSessionId(null)
       }
     } catch (error) {
       message.error("Error al cerrar la sesión");
-    }finally{
+    } finally {
       setIsLogout(false)
 
     }
   };
-  const [fetchingUser, setFetchingUser] = useState(false)
-  const [userData, setUserData] = useState([])
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      setFetchingUser(true)
-
-      try {
-        const { data, error } = await supabase
-          .from('usuarios')
-          .select()
-          .eq("email", userMail)
-
-          console.log(data)
-
-        if (error) {
-          message.error("Hubo un problema, recargue la pagina e intente nuevamente")
-        }
-        if (data.length > 0) {
-          setFetchingUser(false)
-          setUserData(data)
-        } else {
-          setFetchingUser(false)
-
-        }
-      } catch (error) {
-        message.error("Hubo un problema, recargue la pagina e intente nuevamente")
-      } finally {
-        setFetchingUser(false)
-
-      }
-    }
-    fetchUserData()
-
-  }, [sessionData])
-
-  const fetchUserData = async () => {
-    setFetchingUser(true)
-
+  //Obtiene los datos del cliente
+  const [fetchingClientData, setFetchingClientData] = useState(false)
+  const [clientData, setClientData] = useState([])
+  const fetchClientData = async() => {
+    setFetchingClientData(true)
     try {
       const { data, error } = await supabase
         .from('usuarios')
         .select()
-        .eq("email", userMail)
+        .eq("userUuid",sessionId)
 
-      if (error) {
-        message.error("Hubo un problema, recargue la pagina e intente nuevamente")
+      if (data) {
+        setClientData(data)
+        setFetchingClientData(false)
+
       }
-
-      if (data.length > 0) {
-        setFetchingUser(false)
-        setUserData(data)
-      } else {
-        setUserData(null)
-        setFetchingUser(false)
+      if (error) {
+        message.error("Hubo un error al mostrar su cuenta")
+        setFetchingClientData(false)
 
       }
     } catch (error) {
-      message.error("Hubo un problema, recargue la pagina e intente nuevamente")
-    } finally {
-      setFetchingUser(false)
+      message.error("Hubo un error al mostrar su cuenta")
 
+    }finally{
+      setFetchingClientData(false)
     }
   }
-  
 
+  //Hook para que cuando el usuario entra a la pagina se habilite automaticamente su sesion
+  useEffect(() => {
+    if (sessionId !== null) {
+      navigate("/user-dashboard")
+    } else {
+      navigate("/user-login")
+    }
+    console.log("sessionId: ", sessionId)
+  }, [sessionId])
 
   const [insertingUserData, setInsertingUserData] = useState(false)
   const [errorInsertingUserData, seterrorInsertingUserData] = useState(false)
   const [insertUserDataSuccess, setinsertUserDataSuccess] = useState(false)
   const insertUserData = async (val) => {
+    console.log(val)
     setInsertingUserData(true)
     try {
       const { error } = await supabase
         .from('usuarios')
         .insert({ 
-            "userId": val.uuid,
+            "userUuid": val.uuid,
             "newUser": val.newUser,
             "nombre": val.nombre,
             "apellido": val.apellido,
@@ -260,7 +208,7 @@ export const AppContextProvider = ({ children }) => {
         setTimeout(() => {
           setinsertUserDataSuccess(false)
         }, 2000);
-        fetchUserData()
+        fetchClientData()
     } catch (error) {
       message.error("Ups, No se pudo enviar sus datos, por favor intente nuevamente")
 
@@ -286,13 +234,13 @@ export const AppContextProvider = ({ children }) => {
         "ciudad": val.ciudad,
         "provincia": val.provincia
       })
-      .eq('userId', val.uuid)
+      .eq('userUuid', val.uuid)
       if (!error) {
         message.success("Datos actualizados!")
         setSucessUpdateClient(true)
         setTimeout(() => {
           setSucessUpdateClient(false)
-          
+
         }, 2000);
         setUpdatingClient(false)
         message.info("Refrescando página en 3...")
@@ -323,9 +271,9 @@ export const AppContextProvider = ({ children }) => {
     <AppContext.Provider value={{
       login, errorUser,
       register, errorRegister, sending,
-      retrieveSession, sessionData,fetchSession,
-      fetchingUser, userData,
-      logout,isLogout,
+      retrieveSessionUser,
+      logout, isLogout, retrievingSession, sessionId,
+      fetchClientData, fetchingClientData,clientData,
       insertUserData,insertUserDataSuccess,errorInsertingUserData,insertingUserData,
       updateClientData, errorUpdateClient, sucessUpdateClient, updatingCient
     }}>

@@ -2,6 +2,7 @@ import React, { useContext, createContext, useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import { supabase } from "./componentes/Auth";
 import { message } from "antd";
+import {v4 as uuidv4} from "uuid"
 
 export const AppContext = createContext();
 
@@ -92,7 +93,7 @@ export const AppContextProvider = ({ children }) => {
     }
 
   }
-  
+
   //Obtener la sesion del usuario
   const [retrievingSession, setRetrievingSession] = useState(false)
   const [sessionId, setGetSessionId] = useState(null)
@@ -138,13 +139,13 @@ export const AppContextProvider = ({ children }) => {
   //Obtiene los datos del cliente
   const [fetchingClientData, setFetchingClientData] = useState(false)
   const [clientData, setClientData] = useState([])
-  const fetchClientData = async() => {
+  const fetchClientData = async () => {
     setFetchingClientData(true)
     try {
       const { data, error } = await supabase
         .from('usuarios')
         .select()
-        .eq("userUuid",sessionId)
+        .eq("userUuid", sessionId)
 
       if (data) {
         setClientData(data)
@@ -159,7 +160,7 @@ export const AppContextProvider = ({ children }) => {
     } catch (error) {
       message.error("Hubo un error al mostrar su cuenta")
 
-    }finally{
+    } finally {
       setFetchingClientData(false)
     }
   }
@@ -183,58 +184,58 @@ export const AppContextProvider = ({ children }) => {
     try {
       const { error } = await supabase
         .from('usuarios')
-        .insert({ 
-            "userUuid": val.uuid,
-            "newUser": val.newUser,
-            "nombre": val.nombre,
-            "apellido": val.apellido,
-            "email": val.correo,
-            "telefono": val.phone,
-            "ciudad":val.ciudad,
-            "provincia": val.provincia,
-            "direccion":val.direccion
-         })
-         if (error) {
-          seterrorInsertingUserData(true)
-          setInsertingUserData(false)
-          message.error("Ups, No se pudo enviar sus datos, por favor intente nuevamente")
-          setTimeout(() => {
-            seterrorInsertingUserData(false)
-          }, 2000);
-        }
-        message.success("Datos guardados correctamente")
-        setinsertUserDataSuccess(true)
+        .insert({
+          "userUuid": val.uuid,
+          "newUser": val.newUser,
+          "nombre": val.nombre,
+          "apellido": val.apellido,
+          "email": val.correo,
+          "telefono": val.phone,
+          "ciudad": val.ciudad,
+          "provincia": val.provincia,
+          "direccion": val.direccion
+        })
+      if (error) {
+        seterrorInsertingUserData(true)
         setInsertingUserData(false)
+        message.error("Ups, No se pudo enviar sus datos, por favor intente nuevamente")
         setTimeout(() => {
-          setinsertUserDataSuccess(false)
+          seterrorInsertingUserData(false)
         }, 2000);
-        fetchClientData()
+      }
+      message.success("Datos guardados correctamente")
+      setinsertUserDataSuccess(true)
+      setInsertingUserData(false)
+      setTimeout(() => {
+        setinsertUserDataSuccess(false)
+      }, 2000);
+      fetchClientData()
     } catch (error) {
       message.error("Ups, No se pudo enviar sus datos, por favor intente nuevamente")
 
-    }finally{
+    } finally {
       setInsertingUserData(false)
     }
   }
 
   const [updatingCient, setUpdatingClient] = useState(false);
   const [errorUpdateClient, setErrorUpdateClient] = useState(false);
-  const [sucessUpdateClient,setSucessUpdateClient] = useState(false)
-  const updateClientData = async(val) =>{
+  const [sucessUpdateClient, setSucessUpdateClient] = useState(false)
+  const updateClientData = async (val) => {
     setUpdatingClient(true)
     try {
       const { error } = await supabase
-      .from('usuarios')
-      .update({
-        "nombre": val.nombre,
-        "apellido": val.apellido,
-        "email": val.correo,
-        "direccion": val.direccion,
-        "telefono": val.phone,
-        "ciudad": val.ciudad,
-        "provincia": val.provincia
-      })
-      .eq('userUuid', val.uuid)
+        .from('usuarios')
+        .update({
+          "nombre": val.nombre,
+          "apellido": val.apellido,
+          "email": val.correo,
+          "direccion": val.direccion,
+          "telefono": val.phone,
+          "ciudad": val.ciudad,
+          "provincia": val.provincia
+        })
+        .eq('userUuid', val.uuid)
       if (!error) {
         message.success("Datos actualizados!")
         setSucessUpdateClient(true)
@@ -247,7 +248,7 @@ export const AppContextProvider = ({ children }) => {
         setTimeout(() => {
           window.location.reload()
         }, 3000);
-      }else{
+      } else {
         console.error(error)
         message.error("Hubo un error al actualizar los datos")
         setErrorUpdateClient(true)
@@ -259,23 +260,120 @@ export const AppContextProvider = ({ children }) => {
       }
     } catch (error) {
       message.error("Hubo un error al actualizar los datos")
-        setErrorUpdateClient(true)
-        setTimeout(() => {
-          setErrorUpdateClient(false)
-        }, 5000);
-    }finally{
+      setErrorUpdateClient(true)
+      setTimeout(() => {
+        setErrorUpdateClient(false)
+      }, 5000);
+    } finally {
       setUpdatingClient(false)
     }
   }
+
+  const [insertingProducto, setInsertingProduct] = useState(false)
+  const uploadProduct = async (formData) => {
+    setInsertingProduct(true);
+    try {
+      const formDataObject = {};
+      formData.forEach((value, key) => {
+        formDataObject[key] = value;
+      });
+  
+      const { imagenProducto, ...productData } = formDataObject;
+      const uniqueImageName = `${uuidv4()}-${imagenProducto.name}`;
+  
+      // Subir la imagen al bucket
+      const { data: uploadImage, error: uploadError } = await supabase
+        .storage
+        .from('photos') // Asegúrate de que el nombre del bucket sea correcto
+        .upload(`public/${uniqueImageName}`, imagenProducto, {
+          cacheControl: '3600',
+          upsert: false
+        });
+  
+      message.loading("Subiendo imagen");
+      if (uploadError) {
+        console.error("Error al subir la imagen:", uploadError);
+        message.error("Error al subir la imagen");
+        return;
+      }
+  
+      if (uploadImage) {
+        message.success("Imagen guardada");
+      }
+  
+      const imagePath = `public/${uniqueImageName}`;
+      
+      // Obtener la URL pública de la imagen subida
+      const { data: publicUrlData } = supabase
+        .storage
+        .from('photos')
+        .getPublicUrl(imagePath);
+  
+      const publicUrlImage = publicUrlData.publicUrl;
+      console.log("Public URL: ", publicUrlImage);
+  
+      // Insertar los datos del producto en la base de datos
+      const { data: insertData, error: insertError } = await supabase
+        .from('productos')
+        .insert({
+          nombreProducto: productData.nombreProducto,
+          descripcionProducto: productData.descripcionProducto,
+          precioProducto: productData.precioProducto,
+          tonosProducto: productData.tonosProducto,
+          imagenProducto: imagePath,
+          publicUrl: publicUrlImage
+        });
+  
+      if (insertError) {
+        message.error("Error al insertar el producto");
+        console.log(insertError);
+      } else {
+        message.success("Producto guardado");
+      }
+    } catch (error) {
+      console.error(error);
+      message.error("Error al insertar el producto");
+    } finally {
+      setInsertingProduct(false);
+    }
+  };
+
+  const [productsData, setProductsData] = useState([])
+  const [fetchingProducts, setFetchingProducts] = useState(false)
+  const fetchProducts = async()=>{
+    setFetchingProducts(true);
+    try {
+      const { data, error } = await supabase
+      .from("productos")
+      .select()
+
+      if (data) {
+        setProductsData(data)
+        setFetchingProducts(false)
+      }
+      if (error) {
+        console.log(error)
+      }
+
+    } catch (error) {
+      console.log(error)
+
+    }finally{
+      setFetchingProducts(false)
+    }
+  }
+  
   return (
     <AppContext.Provider value={{
       login, errorUser,
       register, errorRegister, sending,
       retrieveSessionUser,
       logout, isLogout, retrievingSession, sessionId,
-      fetchClientData, fetchingClientData,clientData,
-      insertUserData,insertUserDataSuccess,errorInsertingUserData,insertingUserData,
-      updateClientData, errorUpdateClient, sucessUpdateClient, updatingCient
+      fetchClientData, fetchingClientData, clientData,
+      insertUserData, insertUserDataSuccess, errorInsertingUserData, insertingUserData,
+      updateClientData, errorUpdateClient, sucessUpdateClient, updatingCient,
+      uploadProduct, insertingProducto,
+      fetchProducts,fetchingProducts, productsData
     }}>
       {children}
     </AppContext.Provider>

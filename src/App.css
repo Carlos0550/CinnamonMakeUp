@@ -14,10 +14,12 @@ body{
 }
 
 .columns{
-    border: 2px solid #f06090;
+    outline: 2px solid #f06090;
     border-radius: 15px;
     margin: 1rem;
     padding: 1rem;
+    justify-content: space-evenly;
+
 }
 .container-button{
     border: none;
@@ -30,32 +32,36 @@ body{
     margin: .5rem;
 }
 
-/* @media (prefers-color-scheme: dark) {
-    body {
-        background-color: #fff;
-        color: #000;
-      }
-      
-      .navbar {
-        background-color: #f06090;
-      }
-      
-      .navbar-burger {
-        color: #fff;
-      }
-  
-    /* Asegúrate de anular otros estilos si es necesario */
+.custom-card{
+    max-width: 300px;
+    min-width: 150px;
+    transition: all 300ms ease-in-out;
+    
+}
 
-    .tag {
-        animation: slideLeft 1s ease-in-out 0 1 normal forwards;
-    }    
-    
-    @keyframes slideLeft {
-        0% {
-            transform: translateX(-100%);
-        }
-        100% {
-            transform: translateX(0);
-        }
+.custom-card:hover{
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+/* .img-producto{
+    border-radius: 15px;
+} */
+
+@media(max-width:768px){
+    .custom-card{
+        max-width: 350px;
     }
-    
+    .columns{
+        flex-wrap: wrap;
+        flex: auto;
+        justify-content: space-evenly;
+    }
+}
+.tag{
+    transition: all 200ms ease-in-out;
+    width: 100%;
+}
+.tag:hover{
+    transform: scale(1.1);
+}

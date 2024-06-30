@@ -9,6 +9,7 @@ import Login from './pages/Forms/Login/Login';
 import Register from './pages/Forms/Register/Register';
 import UserDashboard from './pages/userDashboard/UserDashboard';
 import AdminDashboard from './pages/AdminDashBoard/AdminDashboard';
+import Carrito from './pages/Home/Carrito/Carrito';
 function App() {
   
 
@@ -21,6 +22,7 @@ function App() {
         <Route path="/user-register" element={<Register />} />
         <Route path="/user-dashboard" element={<UserDashboard />} />
         <Route path='/admin-dashboard' element={<AdminDashboard/>}/>
+        <Route path='/carrito' element={<Carrito/>}></Route>
       </Routes>
     </>
   );

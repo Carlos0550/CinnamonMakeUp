@@ -329,6 +329,7 @@ export const AppContextProvider = ({ children }) => {
         console.log(insertError);
       } else {
         message.success("Producto guardado");
+        fetchProducts()
       }
     } catch (error) {
       console.error(error);
@@ -362,7 +363,111 @@ export const AppContextProvider = ({ children }) => {
       setFetchingProducts(false)
     }
   }
+
+  const deleteProduct = async(product) =>{
+    console.log("id producto",product.id)
+    try {
+      const { data: dataImagen, error: errorImagen } = await supabase
+      .storage
+      .from('photos')
+      .remove([`${product.imagenProducto}`])
+      console.log(errorImagen)
+      console.log(dataImagen)
+      if (errorImagen) {
+        message.error("Error al borrar el producto")
+        return
+      }
+
+      const response = await supabase
+      .from('productos')
+      .delete()
+      .eq('id', product.id)
+      if (response.status === 204) {
+          message.success("Producto Eliminado")
+          fetchProducts()
+      }
+      console.log(response)
+    } catch (error) {
+      
+    }
+  } 
+
   
+  // const updateProduct = async(values) =>{
+
+  // } 
+  
+  const [cart, setCart] = useState([])
+  const [fetchingCart, setFetchingCart] = useState(false)
+  
+  useEffect(()=>{
+    console.log(cart)
+  },[cart, navigate])
+
+  const fetchCarrito = async() =>{
+    try {
+      const {data, error} = await supabase
+      .from("carrito")
+      .select()
+      .eq("userId", sessionId)
+      if (error) {
+        console.log(error)
+        message.error("Error al mostrar los items del carrito")
+
+      }else{
+        setCart(data)
+        setFetchingCart(false)
+      }
+    } catch (error) {
+      console.log(error)
+      message.error("Error al mostrar los items del carrito")
+
+    }finally{
+      setFetchingCart(false)
+
+    }
+  }
+  const addToCart = async(product) =>{
+    console.log(product)
+    console.log(sessionId)
+
+    setCart(prevCart => [...prevCart, product])
+    try {
+      const {error} = await supabase
+      .from("carrito")
+      .insert({
+        "nombreProducto": product.nombreProducto,
+        "precioProducto": product.precioProducto,
+        "publicUrl": product.publicUrl,
+        "quantity": product.quantity,
+        "userId": product.sessionId
+      })
+      if (error) {
+        console.log(error)
+        message.error("Error al añadir el producto al carrito")
+      }else{
+        message.success(`${product.nombreProducto} añadido!`)
+      }
+    } catch (error) {
+      console.log(error)
+      message.error("Error al añadir el producto al carrito")
+
+    }
+  }
+
+
+  const removeFromCart = (productId) => {
+    console.log(productId);
+    setCart(prevCart => prevCart.filter((_,idx) => idx !== productId))
+};
+
+  const updateCartItem = (productId, quantity) =>{
+    setCart(prevCart =>
+      prevCart.map(product =>
+        product.id === productId ? { ...product, quantity } : product
+      )
+    )
+  }
   return (
     <AppContext.Provider value={{
       login, errorUser,
@@ -373,7 +478,9 @@ export const AppContextProvider = ({ children }) => {
       insertUserData, insertUserDataSuccess, errorInsertingUserData, insertingUserData,
       updateClientData, errorUpdateClient, sucessUpdateClient, updatingCient,
       uploadProduct, insertingProducto,
-      fetchProducts,fetchingProducts, productsData
+      fetchProducts,fetchingProducts, productsData,
+      deleteProduct,
+      cart, addToCart, removeFromCart, updateCartItem,fetchingCart,fetchCarrito
     }}>
       {children}
     </AppContext.Provider>

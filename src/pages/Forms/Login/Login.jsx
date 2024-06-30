@@ -55,7 +55,13 @@ function Login() {
   return (
     <>
       <h1 className='title is-3'>Que bueno verte de nuevo!</h1>
-      <div className='columns'>
+      <div className="box">
+        <button className='button is-primary' onClick={()=> navigate("/")}>Ver productos</button>
+      </div>
+      <div className='columns is-flex-direction-column custom-login'>
+        <div className="">
+          <div className="title has-text-danger">Iniciá sesión con tu cuenta</div>
+        </div>
         <div className='column'>
           <form onSubmit={loginUser}>
             <div className='field'>

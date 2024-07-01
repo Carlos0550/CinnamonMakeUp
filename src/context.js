@@ -2,7 +2,7 @@ import React, { useContext, createContext, useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom'
 import { supabase } from "./componentes/Auth";
 import { message } from "antd";
-import {v4 as uuidv4} from "uuid"
+import { v4 as uuidv4 } from "uuid"
 
 export const AppContext = createContext();
 
@@ -277,10 +277,10 @@ export const AppContextProvider = ({ children }) => {
       formData.forEach((value, key) => {
         formDataObject[key] = value;
       });
-  
+
       const { imagenProducto, ...productData } = formDataObject;
       const uniqueImageName = `${uuidv4()}-${imagenProducto.name}`;
-  
+
       // Subir la imagen al bucket
       const { data: uploadImage, error: uploadError } = await supabase
         .storage
@@ -289,29 +289,29 @@ export const AppContextProvider = ({ children }) => {
           cacheControl: '3600',
           upsert: false
         });
-  
+
       message.loading("Subiendo imagen");
       if (uploadError) {
         console.error("Error al subir la imagen:", uploadError);
         message.error("Error al subir la imagen");
         return;
       }
-  
+
       if (uploadImage) {
         message.success("Imagen guardada");
       }
-  
+
       const imagePath = `public/${uniqueImageName}`;
-      
+
       // Obtener la URL pública de la imagen subida
       const { data: publicUrlData } = supabase
         .storage
         .from('photos')
         .getPublicUrl(imagePath);
-  
+
       const publicUrlImage = publicUrlData.publicUrl;
       console.log("Public URL: ", publicUrlImage);
-  
+
       // Insertar los datos del producto en la base de datos
       const { data: insertData, error: insertError } = await supabase
         .from('productos')
@@ -323,7 +323,7 @@ export const AppContextProvider = ({ children }) => {
           imagenProducto: imagePath,
           publicUrl: publicUrlImage
         });
-  
+
       if (insertError) {
         message.error("Error al insertar el producto");
         console.log(insertError);
@@ -341,12 +341,12 @@ export const AppContextProvider = ({ children }) => {
 
   const [productsData, setProductsData] = useState([])
   const [fetchingProducts, setFetchingProducts] = useState(false)
-  const fetchProducts = async()=>{
+  const fetchProducts = async () => {
     setFetchingProducts(true);
     try {
       const { data, error } = await supabase
-      .from("productos")
-      .select()
+        .from("productos")
+        .select()
 
       if (data) {
         setProductsData(data)
@@ -359,18 +359,18 @@ export const AppContextProvider = ({ children }) => {
     } catch (error) {
       console.log(error)
 
-    }finally{
+    } finally {
       setFetchingProducts(false)
     }
   }
 
-  const deleteProduct = async(product) =>{
-    console.log("id producto",product.id)
+  const deleteProduct = async (product) => {
+    console.log("id producto", product.id)
     try {
       const { data: dataImagen, error: errorImagen } = await supabase
-      .storage
-      .from('photos')
-      .remove([`${product.imagenProducto}`])
+        .storage
+        .from('photos')
+        .remove([`${product.imagenProducto}`])
       console.log(errorImagen)
       console.log(dataImagen)
       if (errorImagen) {
@@ -379,42 +379,42 @@ export const AppContextProvider = ({ children }) => {
       }
 
       const response = await supabase
-      .from('productos')
-      .delete()
-      .eq('id', product.id)
+        .from('productos')
+        .delete()
+        .eq('id', product.id)
       if (response.status === 204) {
-          message.success("Producto Eliminado")
-          fetchProducts()
+        message.success("Producto Eliminado")
+        fetchProducts()
       }
       console.log(response)
     } catch (error) {
-      
-    }
-  } 
 
-  
+    }
+  }
+
+
   // const updateProduct = async(values) =>{
 
   // } 
-  
+
   const [cart, setCart] = useState([])
   const [fetchingCart, setFetchingCart] = useState(false)
-  
-  useEffect(()=>{
-    console.log(cart)
-  },[cart, navigate])
 
-  const fetchCarrito = async() =>{
+  useEffect(() => {
+    console.log(cart)
+  }, [cart, navigate])
+
+  const fetchCarrito = async () => {
     try {
-      const {data, error} = await supabase
-      .from("carrito")
-      .select()
-      .eq("userId", sessionId)
+      const { data, error } = await supabase
+        .from("carrito")
+        .select()
+        .eq("userId", sessionId)
       if (error) {
         console.log(error)
         message.error("Error al mostrar los items del carrito")
 
-      }else{
+      } else {
         setCart(data)
         setFetchingCart(false)
       }
@@ -422,52 +422,113 @@ export const AppContextProvider = ({ children }) => {
       console.log(error)
       message.error("Error al mostrar los items del carrito")
 
-    }finally{
+    } finally {
       setFetchingCart(false)
 
     }
   }
-  const addToCart = async(product) =>{
-    console.log(product)
-    console.log(sessionId)
+  const [addingProduct, setAddingProduct] = useState(false)
+  const addToCart = async (product) => {
+    setAddingProduct(true)
 
     setCart(prevCart => [...prevCart, product])
     try {
-      const {error} = await supabase
-      .from("carrito")
-      .insert({
-        "nombreProducto": product.nombreProducto,
-        "precioProducto": product.precioProducto,
-        "publicUrl": product.publicUrl,
-        "quantity": product.quantity,
-        "userId": product.sessionId
-      })
+      const { error } = await supabase
+        .from("carrito")
+        .insert({
+          "nombreProducto": product.nombreProducto,
+          "precioProducto": product.precioProducto,
+          "publicUrl": product.publicUrl,
+          "quantity": product.quantity,
+          "userId": product.sessionId
+        })
       if (error) {
         console.log(error)
         message.error("Error al añadir el producto al carrito")
-      }else{
+        setAddingProduct(false)
+
+      } else {
         message.success(`${product.nombreProducto} añadido!`)
+
       }
     } catch (error) {
       console.log(error)
       message.error("Error al añadir el producto al carrito")
 
+    }finally{
+      setAddingProduct(false)
     }
   }
 
+  const [removingItem, setRemovingItem] = useState()
+  const removeFromCart = async (productIndice, productId) => {
+    setRemovingItem(productIndice)
+    try {
+      const response = await supabase
+        .from("carrito")
+        .delete()
+        .eq("id", productId)
 
-  const removeFromCart = (productId) => {
-    console.log(productId);
-    setCart(prevCart => prevCart.filter((_,idx) => idx !== productId))
-};
+      if (response.status === 204) {
+        message.success("Producto eliminado del carrito")
+        setCart(prevCart => prevCart.filter((_, idx) => idx !== productIndice))
+      }else{
+        message.error("Error al eliminar el producto")
+        setRemovingItem(null)
+      }
+    } catch (error) {
 
-  const updateCartItem = (productId, quantity) =>{
-    setCart(prevCart =>
-      prevCart.map(product =>
-        product.id === productId ? { ...product, quantity } : product
-      )
-    )
-  }
+    }finally{
+      setRemovingItem(null)
+    }
+
+  };
+  const [updatingItem, setUpdatingItemIndex] = useState(false)
+  const updateCartItem = async (productIndex, productId) => {
+    setUpdatingItemIndex(productIndex);
+    try {
+      // Clonar el carrito para no mutar directamente el estado
+      const updatedCart = [...cart];
+      let newQuantity;
+      
+      // Verificar si el índice es válido y calcular la nueva cantidad
+      if (productIndex >= 0 && productIndex < updatedCart.length) {
+        newQuantity = parseInt(updatedCart[productIndex].quantity) + 1;
+      } else {
+        message.error("Índice de producto no válido");
+        setUpdatingItemIndex(null);
+        return;
+      }
+  
+      // Actualizar la cantidad en la base de datos
+      const { error } = await supabase
+        .from("carrito")
+        .update({ quantity: newQuantity })
+        .eq("id", productId);
+  
+      if (error) {
+        console.log(error);
+        message.error("Ocurrió un error, por favor, intente nuevamente");
+        setUpdatingItemIndex(null);
+        return;
+      }
+  
+      // Actualizar el objeto específico dentro del carrito clonado
+      updatedCart[productIndex] = {
+        ...updatedCart[productIndex],
+        quantity: newQuantity.toString()
+      };
+  
+      // Actualizar el estado del carrito
+      setCart(updatedCart);
+      message.success("Se añadió otro ítem al carrito");
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setUpdatingItemIndex(null);
+    }
+  };
+  
   return (
     <AppContext.Provider value={{
       login, errorUser,
@@ -478,9 +539,9 @@ export const AppContextProvider = ({ children }) => {
       insertUserData, insertUserDataSuccess, errorInsertingUserData, insertingUserData,
       updateClientData, errorUpdateClient, sucessUpdateClient, updatingCient,
       uploadProduct, insertingProducto,
-      fetchProducts,fetchingProducts, productsData,
+      fetchProducts, fetchingProducts, productsData,
       deleteProduct,
-      cart, addToCart, removeFromCart, updateCartItem,fetchingCart,fetchCarrito
+      cart, addToCart, removeFromCart, updateCartItem, fetchingCart, fetchCarrito, updatingItem,removingItem,addingProduct
     }}>
       {children}
     </AppContext.Provider>

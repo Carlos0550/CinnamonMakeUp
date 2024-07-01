@@ -6,40 +6,46 @@ import { Flex, Spin, Pagination, message } from 'antd';
 import ProductModal from './Modals/ProductModal';
 import Carrito from './Carrito/Carrito';
 function Home() {
-  const { fetchProducts, fetchingProducts, productsData } = useAppContext();
-  const navigate = useNavigate();
-  const [modalProductActive, setModalProductActive] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+    const { fetchProducts, fetchingProducts, productsData } = useAppContext();
+    const navigate = useNavigate();
+    const [modalProductActive, setModalProductActive] = useState(false);
+    const [selectedProduct, setSelectedProduct] = useState(null);
 
-  // Estado para la paginación
-  const [currentPage, setCurrentPage] = useState(1);
-  const [productsPerPage] = useState(10); // Puedes ajustar este número según lo necesites
+    // Estado para la paginación
+    const [currentPage, setCurrentPage] = useState(1);
+    const [productsPerPage] = useState(10); // Puedes ajustar este número según lo necesites
 
-  useEffect(() => {
-    fetchProducts();
-  }, [navigate]);
+    useEffect(() => {
+        fetchProducts();
+    }, [navigate]);
 
-  const toggleProductModal = (product = null) => {
-    setSelectedProduct(product);
-    setModalProductActive(!modalProductActive);
-  };
+    const toggleProductModal = (product = null) => {
+        setSelectedProduct(product);
+        setModalProductActive(!modalProductActive);
+    };
 
-  // Calcular los productos mostrados en la página actual
-  const indexOfLastProduct = currentPage * productsPerPage;
-  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
-  const currentProducts = productsData.slice(indexOfFirstProduct, indexOfLastProduct);
+    // Calcular los productos mostrados en la página actual
+    const indexOfLastProduct = currentPage * productsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+    const currentProducts = productsData.slice(indexOfFirstProduct, indexOfLastProduct);
 
-  // Función para cambiar de página
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-  };
+    // Función para cambiar de página
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    function acortarTexto(texto,limite) {
+            if (texto.length > limite) {
+                return texto.substring(0, limite - 3) + "..."
+            }else{
+                return texto
+            }
+    }
 
 
- 
+    return (
 
-  return (
-    
-    <>
+        <>
             <div className="columns is-mobile">
                 {fetchingProducts ? (
                     <div className='container spinner'>
@@ -58,13 +64,13 @@ function Home() {
                                         </figure>
                                     </div>
                                     <div className='box'>
-                                        <p className="title has-text-primary is-size-5">{item.nombreProducto}
+                                        <p className="title has-text-primary custom-title-home">{acortarTexto(item.nombreProducto, 32)}
                                             <hr />
                                         </p>
                                         <p className='subtitle has-text-danger mt-5 has-text-weight-bold'>${item.precioProducto} c/u</p>
                                         <hr />
                                         {item?.tonosProducto ? <p>Tonos: {item?.tonosProducto}</p> : ""}
-                                        
+
                                     </div>
                                 </div>
                             </div>
@@ -82,7 +88,7 @@ function Home() {
             </div>
             {modalProductActive && <ProductModal product={selectedProduct} closeModal={toggleProductModal} />}
         </>
-  );
+    );
 }
 
 export default Home;

@@ -1,0 +1,294 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+html{
+    overflow-x: hidden;
+    
+}
+
+body{
+    background-color: #fff;
+    height: auto;
+    margin-top: 8rem; /* Ajusta este valor según la altura de tu barra de navegación */
+    min-height: 100vh;
+}
+
+
+.modal{
+    margin-top: 6rem;
+}
+.columns{
+    border-radius: 15px;
+    margin: 1rem;
+    padding: 1rem;
+    flex-wrap: wrap;
+    flex: auto;
+
+}
+.custom-login{
+    max-width: 50%;
+    margin: 0 auto;
+}
+@media(max-width:768px){
+    .custom-login{
+        max-width: 85%;
+    }
+}
+.container-button{
+    border: none;
+    box-shadow: none;
+}
+
+.column__newUser{
+    border: 2px solid #ffb8c2;
+    border-radius: 15px;
+    margin: .5rem;
+}
+
+
+.custom-card{
+    max-width: 250px;
+    min-width: 200px;
+    flex: 1 1 calc(15% - 10px);
+
+    transition: all 300ms ease-in-out;
+    
+}
+.custom-title-home{
+    font-size: clamp(1rem,1.5vw,2rem);
+}
+
+
+.custom-card:hover{
+    transform: scale(1.03);
+    cursor: pointer;
+}
+.img-card-modal{
+    border-radius: 2rem;
+    overflow: hidden;
+    max-width: 100px;
+    margin: 0 auto;
+
+}
+
+.cursom-figure{
+    position: relative;
+    width: 100%;
+    padding-top: 100%;
+    overflow: hidden;
+}
+
+.custom-img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit:cover;
+    border-radius: 1rem;
+  }
+
+  .modal-card-head{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    text-wrap: wrap;
+    height: auto;
+  }
+
+  .encabezadoProducto, .descripcionProducto{
+    font-weight: 500;
+  }
+  .encabezadoProducto{
+    font-size: 1.1rem;
+  }
+
+  .custom-table {
+    border-collapse:separate; /* Necesario para border-radius */
+    border-radius: 10px; /* Ajusta el valor según tus necesidades */
+    overflow: hidden; /* Asegura que el contenido no se desborde */
+  }
+  
+
+  
+  .custom-table th:first-child,
+  .custom-table td:first-child {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  
+  .custom-table th:last-child,
+  .custom-table td:last-child {
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+  }
+  
+  
+/* .img-producto{
+    border-radius: 15px;
+} */
+
+@media(max-width:500px){
+    .custom-card{
+        max-width: 300px;
+        min-width: 100px;
+        margin: 0 0 calc(15% - 15px);
+    }
+    .columns{
+        flex-wrap: wrap;
+        flex: auto;
+        justify-content: space-evenly;
+    }
+    .custom-title-home{
+        font-size: clamp(.9rem, 1.5vw, 2rem);
+    }
+}
+.tag{
+    transition: all 200ms ease-in-out;
+    width: 100%;
+}
+.tag:hover{
+    transform: scale(1.05);
+    cursor: pointer;
+}
+.tag:active{
+    transform: scale(0.9);
+}
+
+
+.custom-tag-uploadProduct{
+    max-width: 200px;
+    padding: 1.1rem;
+    font-size: .5rem;
+    font-weight: bold;
+}
+.custom-tag{
+    width: 40%;
+   
+}
+.custom-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pagination-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.custom-figure-editProduct{
+    position: relative;
+    width: 60%;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.custom-figure-editProduct-img{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit:contain;
+}
+
+/* Carrito */
+.custom-ul__carrito {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    height: auto;
+    width: 100%;
+    padding: 1rem;
+    justify-content: flex-start;
+
+    gap: .5rem;
+    border-radius: 15px;
+}
+
+.custom__box-carrito {
+    display: flex;
+    flex-direction: row;
+    padding: .5rem;
+        justify-content: flex-start;
+
+    gap: 1rem;
+    box-shadow: 5px 10px 15px rgba(0, 0, 0, 0.363);
+    border-radius: 15px;
+    flex: auto;
+}
+
+.custom-li__carrito {
+    display: flex;
+    flex-wrap: nowrap;
+    border-radius: 15px;
+    max-width: 400px;
+     /* Ajusta el porcentaje según cuántos productos quieres por fila */
+    flex: 1 1 calc(15% - 10px);
+    box-sizing: border-box;
+    margin: 5px;
+}
+
+.picture__carrito {
+    width: 60px; /* Tamaño de la imagen */
+    height: 60px; /* Tamaño de la imagen */
+    overflow: hidden;
+    border-radius: 50%; /* Imagen en forma de círculo */
+    object-fit: cover;
+    margin-right: 10px; /* Espacio entre la imagen y el contenido */
+}
+
+.picture__carrito img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.carrito-title-buttons {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex: 1;
+}
+
+.custom-p-carrito {
+    margin: 0;
+    font-size: 1rem; /* Ajusta el tamaño del texto según tu preferencia */
+}
+
+.custom-p-carrito-secondary {
+    margin: 5px 0;
+    font-size: 0.875rem; /* Ajusta el tamaño del texto según tu preferencia */
+    font-weight: bold;
+    text-transform: capitalize;
+    
+}
+
+.custom__box-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.custom__box-buttons button {
+    flex: 1;
+    margin: 0 5px;
+}
+
+.custom-box-payments{
+    margin-top: .5rem;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+}
+
+.ant-message {
+    font-size: 20px; /* Tamaño de fuente deseado */
+  }
+
+

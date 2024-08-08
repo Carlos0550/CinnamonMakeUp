@@ -1,0 +1,21 @@
+
+.spinner{
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.column-logout{
+    width: min-content;
+}
+
+.custom-box-user {
+    display: flex;
+    flex-direction: column;
+    word-wrap: break-word; /* Permite que las palabras largas se ajusten al ancho de la caja */
+    overflow-wrap: break-word; /* Asegura que las palabras largas se ajusten */
+    white-space: normal; /* Permite que el texto se divida en múltiples líneas */
+  }
+  
